@@ -24,7 +24,7 @@ else {
     var tilesnew = document.createElement("ul");
     tilesnew.setAttribute('id', 'tiles');
     main.appendChild(tilesnew);
-    url_verify = image;
+    url_verify = decodeURIComponent(image);
     verify_col_items();
 }
 
@@ -763,9 +763,9 @@ function drop_img(evt) {
         }
         else {
             if ($(imageUrl).children().length > 0) {
-                url_verify = $(imageUrl).find('img').attr('src');
+                url_verify = decodeURIComponent($(imageUrl).find('img').attr('src'));
             } else {
-                url_verify = $(imageUrl).attr('src');
+                url_verify = decodeURIComponent($(imageUrl).attr('src'));
             }
         }
 
@@ -825,7 +825,7 @@ function verify_text() {
         var tilesnew = document.createElement("ul");
         tilesnew.setAttribute('id', 'tiles');
         main.appendChild(tilesnew);
-        url_verify = $("#img_url").val();
+        url_verify = decodeURIComponent($("#img_url").val());
         verify_col_items();
     }
 }
@@ -1016,7 +1016,7 @@ function verify_col_items() {
     if (typeof report_interval !== 'undefined') {
         clearInterval(report_interval);
     }
-    url_verify = url_verify.replace(/\s/g, "%20");
+    url_verify = decodeURIComponent(url_verify.replace(/\s/g, "%20"));
     $.ajax({
         type: "GET",
         url: "http://mmedia.iti.gr/imageforensics/addurl?url=" + encodeURIComponent(url_verify),
@@ -1525,7 +1525,7 @@ function imgError1(image) {
     return true;
 }
 function parse_verify(img) {
-    url_verify = img;
+    url_verify = decodeURIComponent(img);
     if (typeof verify_interval !== 'undefined') {
         clearInterval(verify_interval);
     }
