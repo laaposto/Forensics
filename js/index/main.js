@@ -3397,7 +3397,7 @@ window.onresize = function () {
     }
 };
 
-$("#upload").submit(function (e) {
+$("#upload_form").submit(function (e) {
     var formData = new FormData($(this)[0]);
 
     $.ajax({
