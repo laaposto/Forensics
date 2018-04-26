@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Reveal - Image Verification Assistant</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Analyse the veracity of online media">
+    <meta name="robots" content="index, follow"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="author" content="Laaposto">
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,300,700|Ubuntu:400,300,700&subset=latin,cyrillic-ext,greek-ext,greek,latin-ext,cyrillic'
+          rel='stylesheet' type='text/css'>
+
+    <link rel="shortcut icon" href="../../imgs/favicon.ico"/>
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Image Verification Assistant">
+    <meta name="twitter:description" content="Verification report by running several state-of-the-art image forensics algorithms.">
+    <meta name="twitter:image:src" content="">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../css/index/main.css">
+    <link rel="stylesheet" href="../../css/index/reveal.css">
+    <link rel="stylesheet" href="../../css/index/hopscotch.css">
+    <link href='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.css' rel='stylesheet'/>
+    <!--END CSS -->
+
+</head>
+<body>
+<div id="error_modal" class="reveal-modal">
+    <h1></h1>
+    <p></p>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="thumb_modal" class="reveal-modal">
+    <h3 id="full_desc">Full image</h3>
+
+    <h3 id="thumb_desc">Thumbnail</h3><br>
+    <img src="" id="thumb1"/>
+    <img src="" id="thumb2"/>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="map_modal" class="reveal-modal">
+    <div id='map_gps'></div>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="compare_modal" class="reveal-modal">
+    <div class="slider responsive">
+        <div class="left image">
+            <img src="" id="left_image"/>
+        </div>
+        <div class="right image">
+            <img src="" id="right_image"/>
+        </div>
+    </div>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="myModal5" class="reveal-modal">
+    <p class="modal_desc"><span style="font-weight: bold">Double Quantization</span> analysis detects the traces left by
+        consecutive JPEG compressions on an image. When a spliced region from one image is inserted into another, if
+        the
+        compression histories of the two images differ, the discrepancy may be detected by this algorithm. A typical
+        case of forgery that is detectable by this algorithm is when an item is taken from an image of high quality
+        (or
+        an uncompressed image, or an image that had its past JPEG traces destroyed by scaling/filtering) and placed
+        in
+        an image of lower quality. If the resulting spliced image is then saved as at a high quality, this should
+        result
+        in a successful detection. In the output map, red values (=1) correspond to high probability of a single
+        compression for the corresponding block, while low values (=0) correspond to low probability of single
+        compression. Localized red areas in an otherwise blue image are very likely to contain splices. Images with
+        non-localized high values and values in the range (0.2-0.8) (green/yellow/orange) should not be taken into
+        account.</p>
+
+    <div class="results">
+        <h1>Detections</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/01.jpg">
+            <img src="../../imgs/01Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/02.jpg">
+            <img src="../../imgs/02Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/03.jpg">
+            <img src="../../imgs/03Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/04.jpg">
+            <img src="../../imgs/04Map.png">
+        </div>
+    </div>
+    <div class="results">
+        <h1>Non-detections:</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/05.jpg">
+            <img src="../../imgs/05Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/06.jpg">
+            <img src="../../imgs/06Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/07.jpg">
+            <img src="../../imgs/07Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/08.jpg">
+            <img src="../../imgs/08Map.png">
+        </div>
+    </div>
+    <p class="modal_desc">For more details, see: Lin, Zhouchen, Junfeng He, Xiaoou Tang, and Chi-Keung Tang. "Fast,
+        automatic and fine-grained tampered JPEG image detection via DCT coefficient analysis." Pattern Recognition
+        42,
+        no. 11 (2009): 2492-2501.</p>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="myModal6" class="reveal-modal">
+    <p class="modal_desc"><span style="font-weight: bold">JPEG ghosts</span> are based on the premise that, when a
+        splice is
+        taken from a JPEG image and placed in another one of different quality, traces of the original JPEG
+        compression
+        are carried over. In order to detect them, the image is recompressed in all possible quality levels, and
+        each
+        result is subtracted from the original. If the image contains a splice, a "Ghost" (i.e. a gap) should appear
+        at
+        the quality level that the splice was originally compressed. In reality, Ghosts often appear as regions of
+        high
+        difference, in contrast to the rest of the image. This approach is vulnerable to variations in image
+        content, as
+        high localized differences due to edges will appear at various quality levels. However, an entire localized
+        region -corresponding to a scene object- that stands out in contrast to the entire rest of the image, is a
+        very
+        strong indicator of tampering. As the algorithm outputs a large number of result maps, we only display those
+        having a high probability of containing meaningful results. Still, it is almost certain that only a subset
+        of
+        all the maps displayed for a single image will contain any useful information.</p>
+
+    <div class="results">
+        <h1>Detections</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/09.jpg">
+            <img src="../../imgs/09Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/10.jpg">
+            <img src="../../imgs/10Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/02.jpg">
+            <img src="../../imgs/11Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/04.jpg">
+            <img src="../../imgs/12Map.png">
+        </div>
+    </div>
+    <div class="results">
+        <h1>Non-detections:</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/02.jpg">
+            <img src="../../imgs/13Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/14.jpg">
+            <img src="../../imgs/14Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/15.jpg">
+            <img src="../../imgs/15Map.png">
+        </div>
+    </div>
+    <p class="modal_desc">For more details, see: Farid, Hany. "Exposing digital forgeries from JPEG ghosts." Information
+        Forensics and Security, IEEE Transactions on 4, no. 1 (2009): 154-160.</p>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="myModal7" class="reveal-modal">
+    <p class="modal_desc"><span style="font-weight: bold">JPEG blocking artifact inconsistencies</span> are traces left
+        when
+        tampering JPEG images by splicing, copy-moving or inpainting. JPEG compression is based on a non-overlapping
+        grid of adjacent blocks of 8×8 pixels. Any part of an image that has undergone at least one JPEG compression
+        carries a blocking trace of this dimension, and its presence is stronger at lower JPEG qualities. When
+        performing any forgery, it is highly likely that the 8×8 grid of the spliced or moved area will misalign
+        with
+        the rest of the image and leave a visible trace. The outputs of this algorithm are often noisy, and are
+        occasionally activated by high-variance image content, so an investigator should look for inconsistencies in
+        regions that should be uniform. In the third ȐDetectionsȑ example, the high values around the keyboard keys
+        are
+        to be expected due to the sharp edges. The discontinuities in the areas around the lower post-it, the upper
+        badge and the upper marker, on the other hand, cannot be attributed to image content, as they occur in the
+        middle of the (uniform) table surface. Thus, they have to be attributed to alterations of the image content.
+    </p>
+
+    <div class="results">
+        <h1>Detections</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/16.jpg">
+            <img src="../../imgs/16Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/17.jpg">
+            <img src="../../imgs/17Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/08.jpg">
+            <img src="../../imgs/18Map.png">
+        </div>
+    </div>
+    <div class="results">
+        <h1>Non-detections:</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/19.jpg">
+            <img src="../../imgs/19Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/05.jpg">
+            <img src="../../imgs/20Map.png">
+        </div>
+    </div>
+    <p class="modal_desc">For more details, see: Li, Weihai, Yuan Yuan, and Nenghai Yu. "Passive detection of doctored
+        JPEG
+        image via block artifact grid extraction." Signal Processing 89, no. 9 (2009): 1821-1829.</p>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="myModal8" class="reveal-modal">
+    <p class="modal_desc"><span style="font-weight: bold">Error Level Analysis</span> is based on a technique very
+        similar
+        to JPEG Ghosts, that is the subtraction of a recompressed JPEG version of the suspect image from the image
+        itself. In contrast to JPEG Ghosts, only a single version of the image is subtracted -in our case, of
+        quality
+        75. Furthermore, while the output of JPEG Ghosts is normalized and filtered to enhance local effects, ELA
+        output
+        is returned to the user as-is. The assumption is that, when subtracting a recompressed version of the image
+        from
+        itself, regions that have undergone fewer (or less disruptive, higher-quality) compressions will yield a
+        higher
+        residual. When interpreted by an analyst, areas of interest are those that return higher values than other
+        similar parts of the image. It is important to remember that only similar regions should be compared, i.e.
+        edges
+        should be compared to edges, and uniform regions should be compared to uniform regions.</p>
+
+    <div class="results">
+        <h1>Detections</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/01.jpg">
+            <img src="../../imgs/21Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/10.jpg">
+            <img src="../../imgs/22Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/15.jpg">
+            <img src="../../imgs/23Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/04.jpg">
+            <img src="../../imgs/24Map.png">
+        </div>
+    </div>
+    <div class="results">
+        <h1>Non-detections:</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/19.jpg">
+            <img src="../../imgs/25Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/26.jpg">
+            <img src="../../imgs/26Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/03.jpg">
+            <img src="../../imgs/27Map.png">
+        </div>
+    </div>
+    <p class="modal_desc">For more details, see: http://fotoforensics.com/tutorial-ela.php </p>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="myModal9" class="reveal-modal">
+    <p class="modal_desc"><span style="font-weight: bold">Median Noise Residuals</span> operate based on the observation
+        that different images feature different high-frequency noise patterns. To isolate noise, we apply median
+        filtering on the image and then subtract the filtered result from the original image. As the median-filtered
+        image contains the low-frequency content of the image, the residue will contain the high-frequency content.
+        The
+        output maps should be interpreted by a rationale similar to Error Level Analysis, i.e. if regions of similar
+        content feature different intensity residue, it is likely that the region originates from a different image
+        source. As noise is generally an unreliable estimator of tampering, this algorithm should best be used to
+        confirm the output of other descriptors, rather than as an independent detector.</p>
+
+    <div class="results">
+        <h1>Detections</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/36.jpg">
+            <img src="../../imgs/36Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/15.jpg">
+            <img src="../../imgs/37Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/16.jpg">
+            <img src="../../imgs/38Map.png">
+        </div>
+    </div>
+    <div class="results">
+        <h1>Non-detections:</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/05.jpg">
+            <img src="../../imgs/39Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/04.jpg">
+            <img src="../../imgs/40Map.png">
+        </div>
+    </div>
+    <p class="modal_desc">For more details, see: https://29a.ch/2015/08/21/noise-analysis-for-image-forensics</p>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="myModal10" class="reveal-modal">
+    <p class="modal_desc"><span style="font-weight: bold">High-frequency noise patterns</span> can be used for splicing
+        detection, as the local noise variance of an image is often unique and distinctive. This method detects the
+        local variance of high-frequency information on an image. In the resulting output maps, whether values are
+        high
+        or low is irrelevant. What is significant is the presence of localized consistent differences in noise
+        variance
+        values. Since high-frequency noise can be affected by the image content, comparisons should be made between
+        visually similar areas (e.g. edges to edges, smooth areas to smooth areas). Methods based on noise patterns
+        are
+        not particularly precise, and unless extremely clear patterns appear, this algorithm should be used in
+        conjunction with other detectors.</p>
+
+    <div class="results">
+        <h1>Detections</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/16.jpg">
+            <img src="../../imgs/28Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/29.jpg">
+            <img src="../../imgs/29Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/09.jpg">
+            <img src="../../imgs/30Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/15.jpg">
+            <img src="../../imgs/31Map.png">
+        </div>
+    </div>
+    <div class="results">
+        <h1>Non-detections:</h1>
+
+        <div class="results_img">
+            <img src="../../imgs/02.jpg">
+            <img src="../../imgs/32Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/05.jpg">
+            <img src="../../imgs/33Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/03.jpg">
+            <img src="../../imgs/33Map.png">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/04.jpg">
+            <img src="../../imgs/34Map.png">
+        </div>
+    </div>
+    <p class="modal_desc">For more details, see: Mahdian, Babak, and Stanislav Saic. "Using noise inconsistencies for
+        blind
+        image forensics." Image and Vision Computing 27, no. 10 (2009): 1497-1503.</p>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="myModal11" class="reveal-modal">
+    <p class="modal_desc">JPEG Blocking artifacts appear as a regular pattern of visible block boundaries in a JPEG
+        compressed image, as a result of the quantization of the coefficients and the independent
+        processing of the non-overlapping 8x8 blocks, during the DCT Transform. GRIDS locates grid
+        alignment abnormalities in a JPEG compressed image bitmap, as an indicator of possible
+        forgery. Multiple grid positions are investigated in order to maximize a fitting function. Areas
+        of lower contribution are recognized as grid discontinuities (possible tampering). An image
+        segmentation step is introduced to differentiate between discontinuities produced by
+        tampering and those that are attributed to image content, clearing the output maps by
+        suppressing non-relevant activations. The higher readability of the maps comes with a cost
+        in the form of coarser-grained detection results, more so for low resolution images.
+        GRIDS-Inversed accounts for tampering scenarios where the discontinuities appear as areas
+        of averagely higher contribution. The suppression of non-relevant activations is inversed
+        during the image segmentation step, and an alternative output maps is produced. The user
+        can then estimate the most appropriate output based on visual inspection.</p>
+
+    <div class="results">
+        <h1>Detections(GRIDS)</h1>
+
+        <div class="results_img">
+            <p>Input</p>
+
+            <p>GRIDS</p>
+
+            <p>GRIDS-Inversed</p>
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/37.jpg">
+            <img src="../../imgs/41Map.jpg">
+            <img src="../../imgs/42Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/02.jpg">
+            <img src="../../imgs/43Map.jpg">
+            <img src="../../imgs/44Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/38.png">
+            <img src="../../imgs/45Map.jpg">
+            <img src="../../imgs/46Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/16.jpg">
+            <img src="../../imgs/47Map.jpg">
+            <img src="../../imgs/48Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/39.jpg">
+            <img src="../../imgs/49Map.jpg">
+            <img src="../../imgs/50Map.jpg">
+        </div>
+    </div>
+    <div class="results">
+        <h1>Non-Detect:</h1>
+
+        <div class="results_img">
+            <p>Input</p>
+
+            <p>GRIDS</p>
+
+            <p>GRIDS-Inversed</p>
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/40.png">
+            <img src="../../imgs/51Map.jpg">
+            <img src="../../imgs/52Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/41.png">
+            <img src="../../imgs/53Map.jpg">
+            <img src="../../imgs/54Map.jpg">
+        </div>
+    </div>
+    <div class="results">
+        <h1>Detections (GRIDS - INV):</h1>
+
+        <div class="results_img">
+            <p>Input</p>
+
+            <p>GRIDS</p>
+
+            <p>GRIDS-Inversed</p>
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/29.jpg">
+            <img src="../../imgs/55Map.jpg">
+            <img src="../../imgs/56Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/05.jpg">
+            <img src="../../imgs/57Map.jpg">
+            <img src="../../imgs/58Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/17.jpg">
+            <img src="../../imgs/59Map.jpg">
+            <img src="../../imgs/60Map.jpg">
+        </div>
+    </div>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<div id="myModal12" class="reveal-modal">
+    <p class="modal_desc">JPEG Blocking artifacts appear as a regular pattern of visible block boundaries in a JPEG
+        compressed image, as a result of the quantization of the coefficients and the independent
+        processing of the non-overlapping 8x8 blocks, during the DCT Transform. GRIDS locates grid
+        alignment abnormalities in a JPEG compressed image bitmap, as an indicator of possible
+        forgery. Multiple grid positions are investigated in order to maximize a fitting function. Areas
+        of lower contribution are recognized as grid discontinuities (possible tampering). An image
+        segmentation step is introduced to differentiate between discontinuities produced by
+        tampering and those that are attributed to image content, clearing the output maps by
+        suppressing non-relevant activations. The higher readability of the maps comes with a cost
+        in the form of coarser-grained detection results, more so for low resolution images.
+        GRIDS-Inversed accounts for tampering scenarios where the discontinuities appear as areas
+        of averagely higher contribution. The suppression of non-relevant activations is inversed
+        during the image segmentation step, and an alternative output maps is produced. The user
+        can then estimate the most appropriate output based on visual inspection.</p>
+
+    <div class="results">
+        <h1>Detections(GRIDS)</h1>
+
+        <div class="results_img">
+            <p>Input</p>
+
+            <p>GRIDS</p>
+
+            <p>GRIDS-Inversed</p>
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/37.jpg">
+            <img src="../../imgs/41Map.jpg">
+            <img src="../../imgs/42Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/02.jpg">
+            <img src="../../imgs/43Map.jpg">
+            <img src="../../imgs/44Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/38.png">
+            <img src="../../imgs/45Map.jpg">
+            <img src="../../imgs/46Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/16.jpg">
+            <img src="../../imgs/47Map.jpg">
+            <img src="../../imgs/48Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/39.jpg">
+            <img src="../../imgs/49Map.jpg">
+            <img src="../../imgs/50Map.jpg">
+        </div>
+    </div>
+    <div class="results">
+        <h1>Non-Detect:</h1>
+
+        <div class="results_img">
+            <p>Input</p>
+
+            <p>GRIDS</p>
+
+            <p>GRIDS-Inversed</p>
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/40.png">
+            <img src="../../imgs/51Map.jpg">
+            <img src="../../imgs/52Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/41.png">
+            <img src="../../imgs/53Map.jpg">
+            <img src="../../imgs/54Map.jpg">
+        </div>
+    </div>
+    <div class="results">
+        <h1>Detections (GRIDS - INV):</h1>
+
+        <div class="results_img">
+            <p>Input</p>
+
+            <p>GRIDS</p>
+
+            <p>GRIDS-Inversed</p>
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/29.jpg">
+            <img src="../../imgs/55Map.jpg">
+            <img src="../../imgs/56Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/05.jpg">
+            <img src="../../imgs/57Map.jpg">
+            <img src="../../imgs/58Map.jpg">
+        </div>
+        <div class="results_img">
+            <img src="../../imgs/17.jpg">
+            <img src="../../imgs/59Map.jpg">
+            <img src="../../imgs/60Map.jpg">
+        </div>
+    </div>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+
+<div id="navigation">
+    <ul>
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../index.html?tour=start">Tutorial</a></li>
+        <li><a href="../../about.html">About</a></li>
+        <li><a href="https://github.com/MKLab-ITI/image-forensics">Github</a></li>
+    </ul>
+</div><div class="alert alert-info">
+    <a href="#" class="close_info">×</a>
+    <strong>Info!</strong> Image processing may take a few minutes...
+</div>
+
+<div id="selected_image"></div>
+<div id="container" style="padding-top: 50px;">
+    <div id="main" role="main">
+        <div id="loading">Loading images, please wait.....
+            <img id="loadimg" src="../../imgs/loading.gif" alt="loading.."/>
+        </div>
+        <ul id="tiles"></ul>
+    </div>
+
+    <div class="pdf_info">
+        <div id="user_text_wrapper">
+            <textarea placeholder="Description..." id="user_text"></textarea>
+            <button type="button" onclick="download_pdf();return false;" class="btn-primary"
+                    id="download"> Download PDF
+            </button>
+        </div>
+        <button type="button" onclick="generate_pdf();return false;" class="btn-primary" id="pdf">
+            Save your analysis as PDF
+        </button>
+        <div id="loading_pdf">
+            <p>Generating PDF...</p>
+        </div>
+    </div>
+</div>
+<div id="footer">
+    <div class="footer_container">
+        <div class="footer_widget_wrap">
+            <div class="footer_widget">
+                <div><h3 class="widget-title">TEAM</h3>
+
+                    <div><strong>Partners</strong><br>
+                        CERTH<br>DW<br>
+                        <br>
+                        <strong>Key People</strong><br>
+                        Markos Zampoglou<br>Symeon Papadopoulos<br>Lazaros Apostolidis<br>Ruben Bouwmeester<br>
+                        <br>
+                        <strong>E-mail</strong><br>
+                        verifymedia@iti.gr<br>
+                    </div>
+                </div>
+            </div>
+            <div class="footer_widget">
+                <div><h3 class="widget-title">SUPPORT</h3>
+
+                    <div><strong>Project Title</strong><br>
+                        <a href="http://revealproject.eu/" target="_blank">REVEAL - REVEALing hidden concepts in
+                            Social Media</a><br>
+                        <br>
+                        <strong>Grant agreement no</strong><br>
+                        610928<br>
+                    </div>
+                </div>
+            </div>
+            <div class="footer_widget">
+                <div><h3 class="widget-title">TERMS OF USE</h3>
+
+                    <div>
+                        <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                        <br><br>
+                        <a href="legal-notice.html" target="_blank">Legal Notice</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- JS -->
+<script>
+    var url_to_verify="";
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
+<script src="../../js/template/ajax_abort.js"></script>
+<script src="../../js/index/jquery.wookmark.js"></script>
+<script src="../../js/index/hopscotch.min.js"></script>
+<script src="../../js/index/jquery.imagesloaded.js"></script>
+<script src="../../js/template/main.js"></script>
+<script src="../../js/template/imagezoom.js"></script>
+<script src="../../js/index/jquery.reveal.js"></script>
+<script src="../../js/template/imgslider.js"></script>
+<script src='../../js/template/pdfmake.min.js'></script>
+<script src='../../js/template/vfs_fonts.js'></script>
+<!-- Matomo -->
+<script type="text/javascript">
+    var _paq = _paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+        var u="//160.40.51.26/projects/matomo/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    })();
+</script>
+<!-- End Matomo Code -->
+
+</body>
+
+</html>
