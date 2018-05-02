@@ -8,6 +8,9 @@
     #img_url {
         width: 410px;
     }
+    #error_image{
+        width: 510px !important;
+    }
 
     #user_input_title {
         font-size: 40px !important;
@@ -34,6 +37,9 @@
 @media (max-width: 600px) {
     #img_url {
         width: 110px;
+    }
+    #error_image{
+        width: 210px !important;
     }
 
     #user_input_title {
@@ -1012,14 +1018,20 @@ table:last-of-type {
     }
 }
 
-#error_upload {
+#error_upload, #error_image {
     margin-right: 16px;
     position: relative;
     top: -10px;
     color: #BF3F3B;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 15px;
     display: none;
+}
+
+#error_image {
+    margin: 0 auto;
+    width: 854px;
+    text-align: right;
 }
 
 #submit_but {
@@ -1031,4 +1043,7 @@ table:last-of-type {
 .pdf_info {
     text-align: center;
     margin-top: 10px;
+}
+.footer_bottom{
+    min-height: calc(100% - 697px);
 }

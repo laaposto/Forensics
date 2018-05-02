@@ -70,11 +70,36 @@ $("#img_url").keyup(function (e) {
 
 function create_page(url) {
     $.ajax({
-        url: "create_page.php?img=" + url,
         type: "GET",
-        success: function (msg) {
-            window.location.href = msg;
-        }
+        url: "http://caa.iti.gr/imageforensicsv2/addurl?url=" + encodeURIComponent(url),
+        dataType: "jsonp",
+        success: function (json) {
+            if (json.status === "no_valid_url") {
+                $('#error_image').text('The url is not valid').css('display', 'block');
+            }
+            else if (json.status === "unsupported_file") {
+                $('#error_image').text('The url is not supported image file').css('display', 'block');
+            }
+            else if (json.status === "image_url_error") {
+                $('#error_image').text('The image could not be downloaded').css('display', 'block');
+            }
+            else if (json.status === "internal_error") {
+                $('#error_image').text('Unexpected error occurred. Contact markzampoglou@iti.gr').css('display', 'block');
+            }
+            else if (json.status === "empty_parameter") {
+                $('#error_image').text('Image URL is required').css('display', 'block');
+            }
+            else {
+                $.ajax({
+                    url: "create_page.php?img=" + url,
+                    type: "GET",
+                    success: function (msg) {
+                        window.location.href = msg;
+                    }
+                });
+            }
+        },
+        async: true
     });
 }
 
@@ -193,14 +218,14 @@ function tour_example() {
         $('#flatTable4 tbody').append('<tr><td>Component1</td><td>Y component: Quantization table 0, Sampling facto</td></tr>');
 
         $('.next_data').css('visibility', 'visible');
-        $('#image0').attr("src", "http://mmedia.iti.gr:8080/images/9be0daf2d2d2215b3e6f3bbd1edd4e4d/DQOutput.png");
-        $('#image6').attr("src", "http://mmedia.iti.gr:8080/images/9be0daf2d2d2215b3e6f3bbd1edd4e4d/GridsOutput.png");
-        $('#image7').attr("src", "http://mmedia.iti.gr:8080/images/9be0daf2d2d2215b3e6f3bbd1edd4e4d/GridsInversedOutput.png");
-        $('#image1').attr("src", "http://mmedia.iti.gr:8080/images/9be0daf2d2d2215b3e6f3bbd1edd4e4d/GhostOutput00.png");
-        $('#image5').attr("src", "http://mmedia.iti.gr:8080/images/9be0daf2d2d2215b3e6f3bbd1edd4e4d/DWNoiseOutput.png");
-        $('#image3').attr("src", "http://mmedia.iti.gr:8080/images/9be0daf2d2d2215b3e6f3bbd1edd4e4d/ELAOutput.png");
-        $('#image2').attr("src", "http://mmedia.iti.gr:8080/images/9be0daf2d2d2215b3e6f3bbd1edd4e4d/BLKOutput.png");
-        $('#image4').attr("src", "http://mmedia.iti.gr:8080/images/9be0daf2d2d2215b3e6f3bbd1edd4e4d/MedianNoiseOutput.png");
+        $('#image0').attr("src", "imgs/tour_DQOutput.png");
+        $('#image6').attr("src", "imgs/tour_GridsOutput.png");
+        $('#image7').attr("src", "imgs/tour_GridsInversedOutput.png");
+        $('#image1').attr("src", "imgs/tour_GhostOutput00.png");
+        $('#image5').attr("src", "imgs/tour_DWNoiseOutput.png");
+        $('#image3').attr("src", "imgs/tour_ELAOutput.png");
+        $('#image2').attr("src", "imgs/tour_BLKOutput.png");
+        $('#image4').attr("src", "imgs/tour_MedianNoiseOutput.png");
 
         $('.metadata_portrait').html($('.metadata_portrait').html() + "<img src='imgs/marker-16-black.png' class='gps'>");
         $('.metadata_portrait').html($('.metadata_portrait').html() + "<img src='imgs/thumb-16.png' class='thumb'>");
