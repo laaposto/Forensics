@@ -202,453 +202,455 @@ function verify_col_items() {
             hash = json.hash;
             $.ajax({
                 type: "GET",
-                url: "http://caa.iti.gr/imageforensicsv2/generatereport?hash=" + json.hash,
+                url: "http://caa.iti.gr/imageforensicsv2/generatereport?hash=" + hash,
                 dataType: "jsonp",
                 success: function (json) {
-                    lat = 0;
-                    long = 0;
-                    has_gps = false, has_thumb = false;
-                    var count_status = 0, grids_flag = true, gridsinv_flag = true, dq_flag = true, ghost_flag = true, noise_flag = true, ela_flag = true, blk_flag = true, media_flag = true, values_flag = true, gps_flag = true, thumb_flag = true;
-                    report_interval = setInterval(function () {
-                        $.ajax({
-                            type: "GET",
-                            url: "http://caa.iti.gr/imageforensicsv2/getreport?hash=" + json.hash,
-                            dataType: "jsonp",
-                            success: function (data) {
-                                if (image_load) {
-                                    if (count_status === 11) {
-                                        $('.alert').slideUp();
-                                        clearInterval(report_interval);
-                                        $('[data-imagezoom]').imageZoom();
-                                        $('#pdf').show();
-                                    }
-                                    if (data.metadataObjectReport.completed && values_flag) {
-                                        values = data.metadataObjectReport.values;
-                                        ghosts_qualities = data.ghostReport.qualities;
-                                        if (values.length > 0) {
-                                            meta1 = "Not found";
-                                            meta2 = "Not found";
-                                            meta3 = "Not found";
-                                            meta4 = "Not found";
-                                            meta5 = "Not found";
-                                            meta6 = "Not found";
-                                            meta7 = "Not found";
-                                            meta8 = "Not found";
-                                            meta9 = "Not found";
-                                            meta10 = "Not found";
-                                            meta11 = "Not found";
-                                            meta12 = "Not found";
-                                            meta13 = "Not found";
-                                            meta14 = "Not found";
-                                            meta15 = "Not found";
-                                            meta16 = "Not found";
-                                            meta17 = "Not found";
-                                            meta18 = "Not found";
-                                            meta19 = "Not found";
-                                            meta20 = "Not found";
-                                            meta21 = "Not found";
-                                            meta22 = "Not found";
-                                            meta23 = "Not found";
-                                            meta24 = "Not found";
-                                            meta25 = "Not found";
-                                            meta26 = "Not found";
-                                            meta27 = "Not found";
-                                            meta28 = "Not found";
-                                            meta29 = "Not found";
-
-                                            for (var i = 0; i < values.length; i++) {
-                                                switch (values[i].name) {
-                                                    case "Exif IFD0":
-                                                        for (var k = 0; k < values[i].values.length; k++) {
-                                                            switch (values[i].values[k].name) {
-                                                                case "Date/Time":
-                                                                    meta1 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Gain Control":
-                                                                    meta2 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Image Description":
-                                                                    meta3 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Image Height":
-                                                                    meta4 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Image Width":
-                                                                    meta5 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Make":
-                                                                    meta6 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Model":
-                                                                    meta7 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Software":
-                                                                    meta8 = values[i].values[k].value;
-                                                                    break;
-                                                            }
-                                                        }
-                                                        break;
-                                                    case "Exif SubIFD":
-                                                        for (var k = 0; k < values[i].values.length; k++) {
-                                                            switch (values[i].values[k].name) {
-                                                                case "Aperture Value":
-                                                                    meta9 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Artist":
-                                                                    meta10 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Body Serial Number":
-                                                                    meta11 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Copyright":
-                                                                    meta12 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Date/Time Original":
-                                                                    meta13 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Exif Image Height":
-                                                                    meta14 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Exif Image Width":
-                                                                    meta15 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Image Description":
-                                                                    meta16 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Shutter Speed Value":
-                                                                    meta17 = values[i].values[k].value;
-                                                                    break;
-                                                            }
-                                                        }
-                                                        break;
-                                                    case "File":
-                                                        for (var k = 0; k < values[i].values.length; k++) {
-                                                            switch (values[i].values[k].name) {
-                                                                case "File Modified Date":
-                                                                    meta18 = values[i].values[k].value;
-                                                                    break;
-                                                                case "File Name":
-                                                                    meta19 = values[i].values[k].value;
-                                                                    break;
-                                                            }
-                                                        }
-                                                        break;
-                                                    case "GPS":
-                                                        for (var k = 0; k < values[i].values.length; k++) {
-                                                            switch (values[i].values[k].name) {
-                                                                case "GPS Altitude":
-                                                                    meta20 = values[i].values[k].value;
-                                                                    break;
-                                                                case "GPS Altitude Ref":
-                                                                    meta21 = values[i].values[k].value;
-                                                                    break;
-                                                                case "GPS Date Stamp":
-                                                                    meta22 = values[i].values[k].value;
-                                                                    break;
-                                                                case "GPS Latitude":
-                                                                    meta23 = values[i].values[k].value;
-                                                                    break;
-                                                                case "GPS Latitude Ref":
-                                                                    meta24 = values[i].values[k].value;
-                                                                    break;
-                                                                case "GPS Longitude":
-                                                                    meta25 = values[i].values[k].value;
-                                                                    break;
-                                                                case "GPS Longitude Ref":
-                                                                    meta26 = values[i].values[k].value;
-                                                                    break;
-                                                                case "GPS Time-Stamp":
-                                                                    meta27 = values[i].values[k].value;
-                                                                    break;
-                                                            }
-                                                        }
-                                                        break;
-                                                    case "Xmp":
-                                                        for (var k = 0; k < values[i].values.length; k++) {
-                                                            switch (values[i].values[k].name) {
-                                                                case "Lens":
-                                                                    meta28 = values[i].values[k].value;
-                                                                    break;
-                                                                case "Serial Number":
-                                                                    meta29 = values[i].values[k].value;
-                                                                    break;
-                                                            }
-                                                        }
-                                                        break;
-                                                }
-                                            }
-
-                                            var $flattable = $('#flatTable1');
-                                            $flattable.find('tbody').append('<p class="table_title"><span style="float: left;width: 7%;">description</span>|&nbsp;&nbsp;&nbsp;&nbsp; value</p>');
-                                            $flattable.find('tbody').append('<p class="table_title_main">Exif IFD0</p>');
-                                            $flattable.append('<tr><td>Date/Time</td><td>' + meta1 + '</td></tr>');
-                                            $flattable.append('<tr><td>Gain Control</td><td>' + meta2 + '</td></tr>');
-                                            $flattable.append('<tr><td>Image Description</td><td>' + meta3 + '</td></tr>');
-                                            $flattable.append('<tr><td>Image Height</td><td>' + meta4 + '</td></tr>');
-                                            $flattable.append('<tr><td>Image Width</td><td>' + meta5 + '</td></tr>');
-                                            $flattable.append('<tr><td>Make</td><td>' + meta6 + '</td></tr>');
-                                            $flattable.append('<tr><td>Model</td><td>' + meta7 + '</td></tr>');
-                                            $flattable.append('<tr><td>Software</td><td>' + meta8 + '</td></tr>');
-
-                                            $flattable.find('tbody').append('<p class="table_title_main">Exif SubIFD</p>');
-                                            $flattable.append('<tr><td>Aperture Value</td><td>' + meta9 + '</td></tr>');
-                                            $flattable.append('<tr><td>Artist</td><td>' + meta10 + '</td></tr>');
-                                            $flattable.append('<tr><td>Body Serial Number</td><td>' + meta11 + '</td></tr>');
-                                            $flattable.append('<tr><td>Copyright</td><td>' + meta12 + '</td></tr>');
-                                            $flattable.append('<tr><td>Date/Time Original</td><td>' + meta13 + '</td></tr>');
-                                            $flattable.append('<tr><td>Exif Image Height</td><td>' + meta14 + '</td></tr>');
-                                            $flattable.append('<tr><td>Exif Image Width</td><td>' + meta15 + '</td></tr>');
-                                            $flattable.append('<tr><td>Image Description</td><td>' + meta16 + '</td></tr>');
-                                            $flattable.append('<tr><td>Shutter Speed Value</td><td>' + meta17 + '</td></tr>');
-
-                                            $flattable.find('tbody').append('<p class="table_title_main">File</p>');
-                                            $flattable.append('<tr><td>File Modified Date</td><td>' + meta18 + '</td></tr>');
-                                            $flattable.append('<tr><td>File Name</td><td>' + meta19 + '</td></tr>');
-
-                                            $flattable.find('tbody').append('<p class="table_title_main">GPS</p>');
-                                            $flattable.append('<tr><td>GPS Altitude</td><td>' + meta20 + '</td></tr>');
-                                            $flattable.append('<tr><td>GPS Altitude Ref</td><td>' + meta21 + '</td></tr>');
-                                            $flattable.append('<tr><td>GPS Date Stamp</td><td>' + meta22 + '</td></tr>');
-                                            $flattable.append('<tr><td>GPS Latitude</td><td>' + meta23 + '</td></tr>');
-                                            $flattable.append('<tr><td>GPS Latitude Ref</td><td>' + meta24 + '</td></tr>');
-                                            $flattable.append('<tr><td>GPS Longitude</td><td>' + meta25 + '</td></tr>');
-                                            $flattable.append('<tr><td>GPS Longitude Ref</td><td>' + meta26 + '</td></tr>');
-                                            $flattable.append('<tr><td>GPS Time-Stamp</td><td>' + meta27 + '</td></tr>');
-
-                                            $flattable.find('tbody').append('<p class="table_title_main">Xmp</p>');
-                                            $flattable.append('<tr><td>Lens</td><td>' + meta28 + '</td></tr>');
-                                            $flattable.append('<tr><td>Serial Number</td><td>' + meta29 + '</td></tr>');
-
-                                            if ($('.original_img').length > 0) {
-                                                var table_fit = Math.floor(($(window).width() - 330) / 350) - 1;
-                                                for (var kl = 1; kl <= values.length; kl++) {
-                                                    $('#flatTable' + kl).after('<table class="flatTable" id="flatTable' + (kl + 1) + '"><thead><tr><td>' + values[kl - 1].name + '</td></tr></thead><tbody style="max-height:' + max_height + 'px;"></tbody></table>');
-                                                    $('#flatTable' + (kl + 1)).find('tbody').prepend('<p class="table_title"><span style="float: left;width: 7%;">description</span>|&nbsp;&nbsp;&nbsp;&nbsp; value</p>');
-                                                    for (var ml = 0; ml < values[kl - 1].values.length; ml++) {
-                                                        $('#flatTable' + (kl + 1) + ' tbody').append('<tr><td>' + values[kl - 1].values[ml].name + '</td><td>' + values[kl - 1].values[ml].value + '</td></tr>')
-                                                    }
-                                                }
-                                                if (table_fit < values.length) {
-                                                    $('.flatTable:gt(' + table_fit + ')').hide();
-                                                    $('.next_data').css('visibility', 'visible');
-                                                }
-                                            }
-                                            else {
-                                                var table_fit = Math.floor(($(window).width() - 430) / 350) - 1;
-                                                for (var kl = 1; kl <= values.length; kl++) {
-                                                    $('#flatTable' + kl).after('<table class="flatTable flatTable_landscape" id="flatTable' + (kl + 1) + '"><thead><tr><td>' + values[kl - 1].name + '</td></tr></thead><tbody style="max-height:' + max_height + 'px;"></tbody></table>');
-                                                    $('#flatTable' + (kl + 1)).find('tbody').prepend('<p class="table_title"><span style="float: left;width: 7%;">description</span>|&nbsp;&nbsp;&nbsp;&nbsp; value</p>');
-                                                    for (var ml = 0; ml < values[kl - 1].values.length; ml++) {
-                                                        $('#flatTable' + (kl + 1) + ' tbody').append('<tr><td>' + values[kl - 1].values[ml].name + '</td><td>' + values[kl - 1].values[ml].value + '</td></tr>')
-                                                    }
-                                                }
-                                                if (table_fit < values.length) {
-                                                    $('.flatTable:gt(' + table_fit + ')').hide();
-                                                    $('.next_data').css('visibility', 'visible');
-                                                }
-                                            }
-                                        }
-                                        else {
-                                            $('.metadata_portrait,.flatTable,.tooltip').css('visibility', 'hidden');
-                                        }
-                                        values_flag = false;
-                                        count_status++;
-                                    }
-                                    if (data.dqReport.completed && dq_flag) {
-
-                                        $('#image0').attr("src", data.dqReport.map);
-                                        $('#a0').attr("href", data.dqReport.map);
-
-                                        load_images();
-                                        dq_flag = false;
-                                        count_status++;
-                                    }
-                                    if (data.gridsReport.completed && grids_flag) {
-
-                                        $('#image6').attr("src", data.gridsReport.map);
-                                        $('#a6').attr("href", data.gridsReport.map);
-
-                                        load_images();
-                                        grids_flag = false;
-                                        count_status++;
-                                    }
-                                    if (data.gridsInversedReport.completed && gridsinv_flag) {
-
-                                        $('#image7').attr("src", data.gridsInversedReport.map);
-                                        $('#a7').attr("href", data.gridsInversedReport.map);
-
-                                        load_images();
-                                        gridsinv_flag = false;
-                                        count_status++;
-                                    }
-                                    if (data.ghostReport.completed && ghost_flag) {
-                                        ghosts = [];
-                                        ghosts_qualities = [];
-
-                                        var thumb = data.ghostReport.maps[0];
-                                        var quality = data.ghostReport.qualities[0];
-
-                                        ghosts.push(thumb);
-                                        ghosts_qualities.push(quality);
-
-                                        $('#image1').attr("src", thumb).css('cursor', 'crosshair');
-                                        $('#image1').attr('data-imagezoom', 'true');
-                                        $('#image1').attr('data-zoomviewborder', '6px solid #000');
-                                        $('#image1').attr('data-magnification', '5');
-                                        $('#a1').attr("href", thumb);
-                                        $('#quality_span').html(quality);
-
-                                        for (var i = 1; i < data.ghostReport.maps.length; i++) {
-                                            thumb = data.ghostReport.maps[i];
-                                            quality = data.ghostReport.qualities[i];
-                                            ghosts.push(thumb);
-                                            ghosts_qualities.push(quality);
-                                            datalist.innerHTML = datalist.innerHTML + "<option>" + i + "</option>"
-                                        }
-                                        $('#slider_range').val('0');
-                                        $('#slider_range').attr('max', data.ghostReport.maps.length - 1);
-
-                                        if (ghosts.length > 1) {
-                                            if (typeof verify_interval !== 'undefined') {
-                                                clearInterval(verify_interval);
-                                            }
-                                            count_imgs = 0;
-                                            var len = ghosts.length;
-                                            verify_interval = setInterval(function () {
-                                                if (!isPaused) {
-                                                    $('#image1').attr('src', ghosts[count_imgs % len]);
-                                                    $('#quality_span').html(" " + ghosts_qualities[count_imgs % len]);
-                                                    $('#slider_range').val(count_imgs % len);
-                                                    count_imgs++;
-                                                }
-                                            }, 1000);
-                                        }
-
-                                        load_images();
-
-                                        ghost_flag = false;
-                                        count_status++;
-                                    }
-                                    if (data.dwNoiseReport.completed && noise_flag) {
-
-                                        $('#image5').attr("src", data.dwNoiseReport.map);
-                                        $('#a5').attr("href", data.dwNoiseReport.map);
-
-                                        load_images();
-                                        noise_flag = false;
-                                        count_status++;
-                                    }
-                                    if (data.elaReport.completed && ela_flag) {
-
-                                        $('#image3').attr("src", data.elaReport.map).css('cursor', 'crosshair');
-                                        $('#image3').attr('data-imagezoom', 'true');
-                                        $('#image3').attr('data-zoomviewborder', '6px solid #000');
-                                        $('#image3').attr('data-magnification', '5');
-                                        $('#a3').attr("href", data.elaReport.map);
-
-                                        load_images();
-                                        ela_flag = false;
-                                        count_status++;
-                                    }
-                                    if (data.blockingReport.completed && blk_flag) {
-
-                                        $('#image2').attr("src", data.blockingReport.map);
-                                        $('#a2').attr("href", data.blockingReport.map);
-
-                                        load_images();
-                                        blk_flag = false;
-                                        count_status++;
-                                    }
-                                    if (data.medianNoiseReport.completed && media_flag) {
-
-                                        $('#image4').attr("src", data.medianNoiseReport.map).css('cursor', 'crosshair');
-                                        $('#image4').attr('data-imagezoom', 'true');
-                                        $('#image4').attr('data-zoomviewborder', '6px solid #000');
-                                        $('#image4').attr('data-magnification', '5');
-                                        $('#a4').attr("href", data.medianNoiseReport.map);
-
-                                        load_images(0, "media", 0);
-                                        media_flag = false;
-                                        count_status++;
-                                    }
-                                    if (data.gpsReport.completed && gps_flag) {
-                                        if (data.gpsReport.exists) {
-                                            lat = data.gpsReport.latitude;
-                                            long = data.gpsReport.longitude;
-                                            has_gps = true;
-                                        }
-                                        if (!values_flag) {
-                                            gps_flag = false;
-                                            count_status++;
-                                            if (has_gps) {
-                                                $('.metadata_portrait').html($('.metadata_portrait').html() + "<img src='../../imgs/marker-16-black.png' class='gps' data-lat=" + lat + " data-long=" + long + ">");
-                                            }
-                                        }
-                                    }
-                                    if (data.dqReport && thumb_flag) {
-                                        if (data.thumbnailReport.numberOfThumbnails > 0) {
-                                            has_thumb = true;
-                                        }
-                                        if (!values_flag) {
-                                            thumbnail_global = data.thumbnailReport.thumbnailList[0];
-                                            thumb_flag = false;
-                                            count_status++;
-                                            if (has_thumb) {
-                                                $('.metadata_portrait').html($('.metadata_portrait').html() + "<img src='../../imgs/thumb-16.png' class='thumb' data-src=" + thumbnail_global + ">");
-                                            }
-                                        }
-                                    }
-                                    if (data.status === "Done") {
-                                        $('#pdf').show();
-                                        $('.alert').slideUp();
-                                        count_status = 11;
-                                        clearInterval(report_interval);
-                                        if (values_flag) {
-                                            $('.metadata_portrait,.flatTable,.tooltip').css('visibility', 'hidden');
-                                        }
-                                        if (dq_flag) {
-                                            $('#image0').attr("src", "../../imgs/image_error.png");
-                                            $('#a0').attr("href", "#");
-                                        }
-                                        if (ghost_flag) {
-                                            $('#image1').attr("src", "../../imgs/image_error.png");
-                                            $('#a1').attr("href", "#");
-                                            $('#quality_span').html(0);
-                                        }
-                                        if (noise_flag) {
-                                            $('#image5').attr("src", "../../imgs/image_error.png");
-                                            $('#a5').attr("href", "#");
-                                        }
-                                        if (ela_flag) {
-                                            $('#image3').attr("src", "../../imgs/image_error.png");
-                                            $('#a3').attr("href", "#");
-                                        }
-                                        if (blk_flag) {
-                                            $('#image2').attr("src", "../../imgs/image_error.png");
-                                            $('#a2').attr("href", "#");
-                                        }
-                                        if (media_flag) {
-                                            $('#image4').attr("src", "../../imgs/image_error.png");
-                                            $('#a4').attr("href", "#");
-                                        }
-                                        if (grids_flag) {
-                                            $('#image6').attr("src", "../../imgs/image_error.png");
-                                            $('#a6').attr("href", "#");
-                                        }
-                                        if (gridsinv_flag) {
-                                            $('#image7').attr("src", "../../imgs/image_error.png");
-                                            $('#a7').attr("href", "#");
-                                        }
-                                    }
-                                }
-                            },
-                            async: true
-                        });
-
-                    }, 1000);
                 },
                 async: true
             });
+            setTimeout(function () {
+                lat = 0;
+                long = 0;
+                has_gps = false, has_thumb = false;
+                var count_status = 0, grids_flag = true, gridsinv_flag = true, dq_flag = true, ghost_flag = true, noise_flag = true, ela_flag = true, blk_flag = true, media_flag = true, values_flag = true, gps_flag = true, thumb_flag = true;
+                report_interval = setInterval(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "http://caa.iti.gr/imageforensicsv2/getreport?hash=" + hash,
+                        dataType: "jsonp",
+                        success: function (data) {
+                            if (image_load) {
+                                if (count_status === 11) {
+                                    $('.alert').slideUp();
+                                    clearInterval(report_interval);
+                                    $('[data-imagezoom]').imageZoom();
+                                    $('#pdf').show();
+                                }
+                                if (data.metadataObjectReport.completed && values_flag) {
+                                    values = data.metadataObjectReport.values;
+                                    ghosts_qualities = data.ghostReport.qualities;
+                                    if (values.length > 0) {
+                                        meta1 = "Not found";
+                                        meta2 = "Not found";
+                                        meta3 = "Not found";
+                                        meta4 = "Not found";
+                                        meta5 = "Not found";
+                                        meta6 = "Not found";
+                                        meta7 = "Not found";
+                                        meta8 = "Not found";
+                                        meta9 = "Not found";
+                                        meta10 = "Not found";
+                                        meta11 = "Not found";
+                                        meta12 = "Not found";
+                                        meta13 = "Not found";
+                                        meta14 = "Not found";
+                                        meta15 = "Not found";
+                                        meta16 = "Not found";
+                                        meta17 = "Not found";
+                                        meta18 = "Not found";
+                                        meta19 = "Not found";
+                                        meta20 = "Not found";
+                                        meta21 = "Not found";
+                                        meta22 = "Not found";
+                                        meta23 = "Not found";
+                                        meta24 = "Not found";
+                                        meta25 = "Not found";
+                                        meta26 = "Not found";
+                                        meta27 = "Not found";
+                                        meta28 = "Not found";
+                                        meta29 = "Not found";
+
+                                        for (var i = 0; i < values.length; i++) {
+                                            switch (values[i].name) {
+                                                case "Exif IFD0":
+                                                    for (var k = 0; k < values[i].values.length; k++) {
+                                                        switch (values[i].values[k].name) {
+                                                            case "Date/Time":
+                                                                meta1 = values[i].values[k].value;
+                                                                break;
+                                                            case "Gain Control":
+                                                                meta2 = values[i].values[k].value;
+                                                                break;
+                                                            case "Image Description":
+                                                                meta3 = values[i].values[k].value;
+                                                                break;
+                                                            case "Image Height":
+                                                                meta4 = values[i].values[k].value;
+                                                                break;
+                                                            case "Image Width":
+                                                                meta5 = values[i].values[k].value;
+                                                                break;
+                                                            case "Make":
+                                                                meta6 = values[i].values[k].value;
+                                                                break;
+                                                            case "Model":
+                                                                meta7 = values[i].values[k].value;
+                                                                break;
+                                                            case "Software":
+                                                                meta8 = values[i].values[k].value;
+                                                                break;
+                                                        }
+                                                    }
+                                                    break;
+                                                case "Exif SubIFD":
+                                                    for (var k = 0; k < values[i].values.length; k++) {
+                                                        switch (values[i].values[k].name) {
+                                                            case "Aperture Value":
+                                                                meta9 = values[i].values[k].value;
+                                                                break;
+                                                            case "Artist":
+                                                                meta10 = values[i].values[k].value;
+                                                                break;
+                                                            case "Body Serial Number":
+                                                                meta11 = values[i].values[k].value;
+                                                                break;
+                                                            case "Copyright":
+                                                                meta12 = values[i].values[k].value;
+                                                                break;
+                                                            case "Date/Time Original":
+                                                                meta13 = values[i].values[k].value;
+                                                                break;
+                                                            case "Exif Image Height":
+                                                                meta14 = values[i].values[k].value;
+                                                                break;
+                                                            case "Exif Image Width":
+                                                                meta15 = values[i].values[k].value;
+                                                                break;
+                                                            case "Image Description":
+                                                                meta16 = values[i].values[k].value;
+                                                                break;
+                                                            case "Shutter Speed Value":
+                                                                meta17 = values[i].values[k].value;
+                                                                break;
+                                                        }
+                                                    }
+                                                    break;
+                                                case "File":
+                                                    for (var k = 0; k < values[i].values.length; k++) {
+                                                        switch (values[i].values[k].name) {
+                                                            case "File Modified Date":
+                                                                meta18 = values[i].values[k].value;
+                                                                break;
+                                                            case "File Name":
+                                                                meta19 = values[i].values[k].value;
+                                                                break;
+                                                        }
+                                                    }
+                                                    break;
+                                                case "GPS":
+                                                    for (var k = 0; k < values[i].values.length; k++) {
+                                                        switch (values[i].values[k].name) {
+                                                            case "GPS Altitude":
+                                                                meta20 = values[i].values[k].value;
+                                                                break;
+                                                            case "GPS Altitude Ref":
+                                                                meta21 = values[i].values[k].value;
+                                                                break;
+                                                            case "GPS Date Stamp":
+                                                                meta22 = values[i].values[k].value;
+                                                                break;
+                                                            case "GPS Latitude":
+                                                                meta23 = values[i].values[k].value;
+                                                                break;
+                                                            case "GPS Latitude Ref":
+                                                                meta24 = values[i].values[k].value;
+                                                                break;
+                                                            case "GPS Longitude":
+                                                                meta25 = values[i].values[k].value;
+                                                                break;
+                                                            case "GPS Longitude Ref":
+                                                                meta26 = values[i].values[k].value;
+                                                                break;
+                                                            case "GPS Time-Stamp":
+                                                                meta27 = values[i].values[k].value;
+                                                                break;
+                                                        }
+                                                    }
+                                                    break;
+                                                case "Xmp":
+                                                    for (var k = 0; k < values[i].values.length; k++) {
+                                                        switch (values[i].values[k].name) {
+                                                            case "Lens":
+                                                                meta28 = values[i].values[k].value;
+                                                                break;
+                                                            case "Serial Number":
+                                                                meta29 = values[i].values[k].value;
+                                                                break;
+                                                        }
+                                                    }
+                                                    break;
+                                            }
+                                        }
+
+                                        var $flattable = $('#flatTable1');
+                                        $flattable.find('tbody').append('<p class="table_title"><span style="float: left;width: 7%;">description</span>|&nbsp;&nbsp;&nbsp;&nbsp; value</p>');
+                                        $flattable.find('tbody').append('<p class="table_title_main">Exif IFD0</p>');
+                                        $flattable.append('<tr><td>Date/Time</td><td>' + meta1 + '</td></tr>');
+                                        $flattable.append('<tr><td>Gain Control</td><td>' + meta2 + '</td></tr>');
+                                        $flattable.append('<tr><td>Image Description</td><td>' + meta3 + '</td></tr>');
+                                        $flattable.append('<tr><td>Image Height</td><td>' + meta4 + '</td></tr>');
+                                        $flattable.append('<tr><td>Image Width</td><td>' + meta5 + '</td></tr>');
+                                        $flattable.append('<tr><td>Make</td><td>' + meta6 + '</td></tr>');
+                                        $flattable.append('<tr><td>Model</td><td>' + meta7 + '</td></tr>');
+                                        $flattable.append('<tr><td>Software</td><td>' + meta8 + '</td></tr>');
+
+                                        $flattable.find('tbody').append('<p class="table_title_main">Exif SubIFD</p>');
+                                        $flattable.append('<tr><td>Aperture Value</td><td>' + meta9 + '</td></tr>');
+                                        $flattable.append('<tr><td>Artist</td><td>' + meta10 + '</td></tr>');
+                                        $flattable.append('<tr><td>Body Serial Number</td><td>' + meta11 + '</td></tr>');
+                                        $flattable.append('<tr><td>Copyright</td><td>' + meta12 + '</td></tr>');
+                                        $flattable.append('<tr><td>Date/Time Original</td><td>' + meta13 + '</td></tr>');
+                                        $flattable.append('<tr><td>Exif Image Height</td><td>' + meta14 + '</td></tr>');
+                                        $flattable.append('<tr><td>Exif Image Width</td><td>' + meta15 + '</td></tr>');
+                                        $flattable.append('<tr><td>Image Description</td><td>' + meta16 + '</td></tr>');
+                                        $flattable.append('<tr><td>Shutter Speed Value</td><td>' + meta17 + '</td></tr>');
+
+                                        $flattable.find('tbody').append('<p class="table_title_main">File</p>');
+                                        $flattable.append('<tr><td>File Modified Date</td><td>' + meta18 + '</td></tr>');
+                                        $flattable.append('<tr><td>File Name</td><td>' + meta19 + '</td></tr>');
+
+                                        $flattable.find('tbody').append('<p class="table_title_main">GPS</p>');
+                                        $flattable.append('<tr><td>GPS Altitude</td><td>' + meta20 + '</td></tr>');
+                                        $flattable.append('<tr><td>GPS Altitude Ref</td><td>' + meta21 + '</td></tr>');
+                                        $flattable.append('<tr><td>GPS Date Stamp</td><td>' + meta22 + '</td></tr>');
+                                        $flattable.append('<tr><td>GPS Latitude</td><td>' + meta23 + '</td></tr>');
+                                        $flattable.append('<tr><td>GPS Latitude Ref</td><td>' + meta24 + '</td></tr>');
+                                        $flattable.append('<tr><td>GPS Longitude</td><td>' + meta25 + '</td></tr>');
+                                        $flattable.append('<tr><td>GPS Longitude Ref</td><td>' + meta26 + '</td></tr>');
+                                        $flattable.append('<tr><td>GPS Time-Stamp</td><td>' + meta27 + '</td></tr>');
+
+                                        $flattable.find('tbody').append('<p class="table_title_main">Xmp</p>');
+                                        $flattable.append('<tr><td>Lens</td><td>' + meta28 + '</td></tr>');
+                                        $flattable.append('<tr><td>Serial Number</td><td>' + meta29 + '</td></tr>');
+
+                                        if ($('.original_img').length > 0) {
+                                            var table_fit = Math.floor(($(window).width() - 330) / 350) - 1;
+                                            for (var kl = 1; kl <= values.length; kl++) {
+                                                $('#flatTable' + kl).after('<table class="flatTable" id="flatTable' + (kl + 1) + '"><thead><tr><td>' + values[kl - 1].name + '</td></tr></thead><tbody style="max-height:' + max_height + 'px;"></tbody></table>');
+                                                $('#flatTable' + (kl + 1)).find('tbody').prepend('<p class="table_title"><span style="float: left;width: 7%;">description</span>|&nbsp;&nbsp;&nbsp;&nbsp; value</p>');
+                                                for (var ml = 0; ml < values[kl - 1].values.length; ml++) {
+                                                    $('#flatTable' + (kl + 1) + ' tbody').append('<tr><td>' + values[kl - 1].values[ml].name + '</td><td>' + values[kl - 1].values[ml].value + '</td></tr>')
+                                                }
+                                            }
+                                            if (table_fit < values.length) {
+                                                $('.flatTable:gt(' + table_fit + ')').hide();
+                                                $('.next_data').css('visibility', 'visible');
+                                            }
+                                        }
+                                        else {
+                                            var table_fit = Math.floor(($(window).width() - 430) / 350) - 1;
+                                            for (var kl = 1; kl <= values.length; kl++) {
+                                                $('#flatTable' + kl).after('<table class="flatTable flatTable_landscape" id="flatTable' + (kl + 1) + '"><thead><tr><td>' + values[kl - 1].name + '</td></tr></thead><tbody style="max-height:' + max_height + 'px;"></tbody></table>');
+                                                $('#flatTable' + (kl + 1)).find('tbody').prepend('<p class="table_title"><span style="float: left;width: 7%;">description</span>|&nbsp;&nbsp;&nbsp;&nbsp; value</p>');
+                                                for (var ml = 0; ml < values[kl - 1].values.length; ml++) {
+                                                    $('#flatTable' + (kl + 1) + ' tbody').append('<tr><td>' + values[kl - 1].values[ml].name + '</td><td>' + values[kl - 1].values[ml].value + '</td></tr>')
+                                                }
+                                            }
+                                            if (table_fit < values.length) {
+                                                $('.flatTable:gt(' + table_fit + ')').hide();
+                                                $('.next_data').css('visibility', 'visible');
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        $('.metadata_portrait,.flatTable,.tooltip').css('visibility', 'hidden');
+                                    }
+                                    values_flag = false;
+                                    count_status++;
+                                }
+                                if (data.dqReport.completed && dq_flag) {
+
+                                    $('#image0').attr("src", data.dqReport.map);
+                                    $('#a0').attr("href", data.dqReport.map);
+
+                                    load_images();
+                                    dq_flag = false;
+                                    count_status++;
+                                }
+                                if (data.gridsReport.completed && grids_flag) {
+
+                                    $('#image6').attr("src", data.gridsReport.map);
+                                    $('#a6').attr("href", data.gridsReport.map);
+
+                                    load_images();
+                                    grids_flag = false;
+                                    count_status++;
+                                }
+                                if (data.gridsInversedReport.completed && gridsinv_flag) {
+
+                                    $('#image7').attr("src", data.gridsInversedReport.map);
+                                    $('#a7').attr("href", data.gridsInversedReport.map);
+
+                                    load_images();
+                                    gridsinv_flag = false;
+                                    count_status++;
+                                }
+                                if (data.ghostReport.completed && ghost_flag) {
+                                    ghosts = [];
+                                    ghosts_qualities = [];
+
+                                    var thumb = data.ghostReport.maps[0];
+                                    var quality = data.ghostReport.qualities[0];
+
+                                    ghosts.push(thumb);
+                                    ghosts_qualities.push(quality);
+
+                                    $('#image1').attr("src", thumb).css('cursor', 'crosshair');
+                                    $('#image1').attr('data-imagezoom', 'true');
+                                    $('#image1').attr('data-zoomviewborder', '6px solid #000');
+                                    $('#image1').attr('data-magnification', '5');
+                                    $('#a1').attr("href", thumb);
+                                    $('#quality_span').html(quality);
+
+                                    for (var i = 1; i < data.ghostReport.maps.length; i++) {
+                                        thumb = data.ghostReport.maps[i];
+                                        quality = data.ghostReport.qualities[i];
+                                        ghosts.push(thumb);
+                                        ghosts_qualities.push(quality);
+                                        datalist.innerHTML = datalist.innerHTML + "<option>" + i + "</option>"
+                                    }
+                                    $('#slider_range').val('0');
+                                    $('#slider_range').attr('max', data.ghostReport.maps.length - 1);
+
+                                    if (ghosts.length > 1) {
+                                        if (typeof verify_interval !== 'undefined') {
+                                            clearInterval(verify_interval);
+                                        }
+                                        count_imgs = 0;
+                                        var len = ghosts.length;
+                                        verify_interval = setInterval(function () {
+                                            if (!isPaused) {
+                                                $('#image1').attr('src', ghosts[count_imgs % len]);
+                                                $('#quality_span').html(" " + ghosts_qualities[count_imgs % len]);
+                                                $('#slider_range').val(count_imgs % len);
+                                                count_imgs++;
+                                            }
+                                        }, 1000);
+                                    }
+
+                                    load_images();
+
+                                    ghost_flag = false;
+                                    count_status++;
+                                }
+                                if (data.dwNoiseReport.completed && noise_flag) {
+
+                                    $('#image5').attr("src", data.dwNoiseReport.map);
+                                    $('#a5').attr("href", data.dwNoiseReport.map);
+
+                                    load_images();
+                                    noise_flag = false;
+                                    count_status++;
+                                }
+                                if (data.elaReport.completed && ela_flag) {
+
+                                    $('#image3').attr("src", data.elaReport.map).css('cursor', 'crosshair');
+                                    $('#image3').attr('data-imagezoom', 'true');
+                                    $('#image3').attr('data-zoomviewborder', '6px solid #000');
+                                    $('#image3').attr('data-magnification', '5');
+                                    $('#a3').attr("href", data.elaReport.map);
+
+                                    load_images();
+                                    ela_flag = false;
+                                    count_status++;
+                                }
+                                if (data.blockingReport.completed && blk_flag) {
+
+                                    $('#image2').attr("src", data.blockingReport.map);
+                                    $('#a2').attr("href", data.blockingReport.map);
+
+                                    load_images();
+                                    blk_flag = false;
+                                    count_status++;
+                                }
+                                if (data.medianNoiseReport.completed && media_flag) {
+
+                                    $('#image4').attr("src", data.medianNoiseReport.map).css('cursor', 'crosshair');
+                                    $('#image4').attr('data-imagezoom', 'true');
+                                    $('#image4').attr('data-zoomviewborder', '6px solid #000');
+                                    $('#image4').attr('data-magnification', '5');
+                                    $('#a4').attr("href", data.medianNoiseReport.map);
+
+                                    load_images(0, "media", 0);
+                                    media_flag = false;
+                                    count_status++;
+                                }
+                                if (data.gpsReport.completed && gps_flag) {
+                                    if (data.gpsReport.exists) {
+                                        lat = data.gpsReport.latitude;
+                                        long = data.gpsReport.longitude;
+                                        has_gps = true;
+                                    }
+                                    if (!values_flag) {
+                                        gps_flag = false;
+                                        count_status++;
+                                        if (has_gps) {
+                                            $('.metadata_portrait').html($('.metadata_portrait').html() + "<img src='../../imgs/marker-16-black.png' class='gps' data-lat=" + lat + " data-long=" + long + ">");
+                                        }
+                                    }
+                                }
+                                if (data.dqReport && thumb_flag) {
+                                    if (data.thumbnailReport.numberOfThumbnails > 0) {
+                                        has_thumb = true;
+                                    }
+                                    if (!values_flag) {
+                                        thumbnail_global = data.thumbnailReport.thumbnailList[0];
+                                        thumb_flag = false;
+                                        count_status++;
+                                        if (has_thumb) {
+                                            $('.metadata_portrait').html($('.metadata_portrait').html() + "<img src='../../imgs/thumb-16.png' class='thumb' data-src=" + thumbnail_global + ">");
+                                        }
+                                    }
+                                }
+                                if (data.status === "Done") {
+                                    $('#pdf').show();
+                                    $('.alert').slideUp();
+                                    count_status = 11;
+                                    clearInterval(report_interval);
+                                    if (values_flag) {
+                                        $('.metadata_portrait,.flatTable,.tooltip').css('visibility', 'hidden');
+                                    }
+                                    if (dq_flag) {
+                                        $('#image0').attr("src", "../../imgs/image_error.png");
+                                        $('#a0').attr("href", "#");
+                                    }
+                                    if (ghost_flag) {
+                                        $('#image1').attr("src", "../../imgs/image_error.png");
+                                        $('#a1').attr("href", "#");
+                                        $('#quality_span').html(0);
+                                    }
+                                    if (noise_flag) {
+                                        $('#image5').attr("src", "../../imgs/image_error.png");
+                                        $('#a5').attr("href", "#");
+                                    }
+                                    if (ela_flag) {
+                                        $('#image3').attr("src", "../../imgs/image_error.png");
+                                        $('#a3').attr("href", "#");
+                                    }
+                                    if (blk_flag) {
+                                        $('#image2').attr("src", "../../imgs/image_error.png");
+                                        $('#a2').attr("href", "#");
+                                    }
+                                    if (media_flag) {
+                                        $('#image4').attr("src", "../../imgs/image_error.png");
+                                        $('#a4').attr("href", "#");
+                                    }
+                                    if (grids_flag) {
+                                        $('#image6').attr("src", "../../imgs/image_error.png");
+                                        $('#a6').attr("href", "#");
+                                    }
+                                    if (gridsinv_flag) {
+                                        $('#image7').attr("src", "../../imgs/image_error.png");
+                                        $('#a7').attr("href", "#");
+                                    }
+                                }
+                            }
+                        },
+                        async: true
+                    });
+
+                }, 1000);
+            }, 2000);
         },
         async: true
     });
