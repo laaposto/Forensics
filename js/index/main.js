@@ -80,8 +80,11 @@ function create_page(url) {
             else if (json.status === "unsupported_file") {
                 $('#error_image').text('The url is not supported image file').css('display', 'block');
             }
-            else if (json.status === "image_url_error") {
+            else if (json.status === "url_error") {
                 $('#error_image').text('The image could not be downloaded').css('display', 'block');
+            }
+            else if (json.status === "image_url_error") {
+                $('#error_image').text('The image could not be downloaded successfully').css('display', 'block');
             }
             else if (json.status === "internal_error") {
                 $('#error_image').text('Unexpected error occurred. Contact markzampoglou@iti.gr').css('display', 'block');
