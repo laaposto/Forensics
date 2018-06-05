@@ -124,7 +124,7 @@ function tour_example() {
 
     $('#container').css('padding-top', '50px');
 
-    var titles_desc = ["Double JPEG quantization inconsistencies (DQ)", "JPEG Ghosts (GHOST)", "JPEG blocking <br> artifact inconsistencies (BLOCK)", "Error Level Analysis (ELA)", "Median filtering <br> noise residue (MEDIAN)", "High frequency noise (WAVELET)", "GRIDS ", "GRIDS-Inversed"];
+    var titles_desc = ["Double JPEG quantization inconsistencies (DQ)", "JPEG Ghosts (GHOST)", "JPEG blocking <br> artifact inconsistencies (BLOCK)", "Error Level Analysis (ELA)", "Median filtering <br> noise residue (MEDIAN)", "High frequency noise (WAVELET)", "CAGI", "CAGI-Inversed"];
     $('.alert').slideDown();
     $('#shade_div').hide();
     var selected_image = document.getElementById('selected_image');

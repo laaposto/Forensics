@@ -13,7 +13,7 @@ verify_col_items();
 var lat = 0, long = 0, thumbnail_global, has_gps = false, image_load = false, has_thumb = false;
 
 function verify_col_items() {
-    var titles_desc = ["Double JPEG quantization inconsistencies (DQ)", "JPEG Ghosts (GHOST)", "JPEG blocking <br> artifact inconsistencies (BLOCK)", "Error Level Analysis (ELA)", "Median filtering <br> noise residue (MEDIAN)", "High frequency noise (WAVELET)", "GRIDS ", "GRIDS-Inversed"];
+    var titles_desc = ["Double JPEG quantization inconsistencies (DQ)", "JPEG Ghosts (GHOST)", "JPEG blocking <br> artifact inconsistencies (BLOCK)", "Error Level Analysis (ELA)", "Median filtering <br> noise residue (MEDIAN)", "High frequency noise (WAVELET)", "CAGI", "CAGI-Inversed"];
     $('.alert').slideDown();
     var selected_image = document.getElementById('selected_image');
     var a_select = document.createElement('a');
@@ -961,14 +961,14 @@ function download_pdf() {
                         columns: [
                             {
                                 width: 250,
-                                text: 'GRIDS',
+                                text: 'CAGI',
                                 alignment: 'center',
                                 fontSize: 10,
                                 margin: [0, 5, 0, 15]
                             },
                             {
                                 width: 250,
-                                text: 'GRIDS INVERSE',
+                                text: 'CAGI INVERSE',
                                 alignment: 'center',
                                 fontSize: 10,
                                 margin: [10, 5, 0, 15]
