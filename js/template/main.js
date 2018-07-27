@@ -196,13 +196,13 @@ function verify_col_items() {
     url_to_verify = decodeURIComponent(url_to_verify.replace(/\s/g, "%20"));
     $.ajax({
         type: "GET",
-        url: "http://caa.iti.gr/imageforensicsv2/addurl?url=" + encodeURIComponent(url_to_verify),
+        url: "http://caa.iti.gr/imageforensicsv3/addurl?url=" + encodeURIComponent(url_to_verify.trim()),
         dataType: "jsonp",
         success: function (json) {
             hash = json.hash;
             $.ajax({
                 type: "GET",
-                url: "http://caa.iti.gr/imageforensicsv2/generatereport?hash=" + hash,
+                url: "http://caa.iti.gr/imageforensicsv3/generatereport?hash=" + hash,
                 dataType: "jsonp",
                 success: function (json) {
                 },
@@ -216,7 +216,7 @@ function verify_col_items() {
                 report_interval = setInterval(function () {
                     $.ajax({
                         type: "GET",
-                        url: "http://caa.iti.gr/imageforensicsv2/getreport?hash=" + hash,
+                        url: "http://caa.iti.gr/imageforensicsv3/getreport?hash=" + hash,
                         dataType: "jsonp",
                         success: function (data) {
                             if (image_load) {
@@ -453,7 +453,9 @@ function verify_col_items() {
                                         }
                                     }
                                     else {
-                                        $('.metadata_portrait,.flatTable,.tooltip').css('visibility', 'hidden');
+                                        $('.tooltip,.desc_arrow').css('visibility', 'hidden');
+                                        $('.flatTable thead td').text("Metadata for this image couldn't be extracted");
+                                        $('.flatTable thead tr').css('width','380px');
                                     }
                                     values_flag = false;
                                     count_status++;
@@ -602,7 +604,7 @@ function verify_col_items() {
                                         }
                                     }
                                 }
-                                if (data.status === "Done") {
+                                if (data.status === "completed") {
                                     $('#pdf').show();
                                     $('.alert').slideUp();
                                     count_status = 11;
@@ -611,37 +613,36 @@ function verify_col_items() {
                                         $('.metadata_portrait,.flatTable,.tooltip').css('visibility', 'hidden');
                                     }
                                     if (dq_flag) {
-                                        $('#image0').attr("src", "../../imgs/image_error.png");
-                                        $('#a0').attr("href", "#");
+                                        $('#a0').hide();
+                                        $('<p class="error_map">'+data.dqReport.message+'</p>').insertBefore('#a0');
                                     }
                                     if (ghost_flag) {
-                                        $('#image1').attr("src", "../../imgs/image_error.png");
-                                        $('#a1').attr("href", "#");
-                                        $('#quality_span').html(0);
+                                        $('#a1,#slider_range,.quality_wrapper').hide();
+                                        $('<p class="error_map">'+data.ghostReport.message+'</p>').insertBefore('#a1');
                                     }
                                     if (noise_flag) {
-                                        $('#image5').attr("src", "../../imgs/image_error.png");
-                                        $('#a5').attr("href", "#");
+                                        $('#a5').hide();
+                                        $('<p class="error_map">'+data.dwNoiseReport.message+'</p>').insertBefore('#a5');
                                     }
                                     if (ela_flag) {
-                                        $('#image3').attr("src", "../../imgs/image_error.png");
-                                        $('#a3').attr("href", "#");
+                                        $('#a3').hide();
+                                        $('<p class="error_map">'+data.elaReport.message+'</p>').insertBefore('#a3');
                                     }
                                     if (blk_flag) {
-                                        $('#image2').attr("src", "../../imgs/image_error.png");
-                                        $('#a2').attr("href", "#");
+                                        $('#a2').hide();
+                                        $('<p class="error_map">'+data.blockingReport.message+'</p>').insertBefore('#a2');
                                     }
                                     if (media_flag) {
-                                        $('#image4').attr("src", "../../imgs/image_error.png");
-                                        $('#a4').attr("href", "#");
+                                        $('#a4').hide();
+                                        $('<p class="error_map">'+data.medianNoiseReport.message+'</p>').insertBefore('#a4');
                                     }
                                     if (grids_flag) {
-                                        $('#image6').attr("src", "../../imgs/image_error.png");
-                                        $('#a6').attr("href", "#");
+                                        $('#a6').hide();
+                                        $('<p class="error_map">'+data.gridsReport.message+'</p>').insertBefore('#a6');
                                     }
                                     if (gridsinv_flag) {
-                                        $('#image7').attr("src", "../../imgs/image_error.png");
-                                        $('#a7').attr("href", "#");
+                                        $('#a7').hide();
+                                        $('<p class="error_map">'+data.gridsInversedReport.message+'</p>').insertBefore('#a7');
                                     }
                                 }
                             }

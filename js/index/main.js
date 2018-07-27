@@ -69,41 +69,31 @@ $("#img_url").keyup(function (e) {
 });
 
 function create_page(url) {
-    $.ajax({
-        type: "GET",
-        url: "http://caa.iti.gr/imageforensicsv2/addurl?url=" + encodeURIComponent(url),
-        dataType: "jsonp",
-        success: function (json) {
-            if (json.status === "no_valid_url") {
-                $('#error_image').text('The url is not valid').css('display', 'block');
-            }
-            else if (json.status === "unsupported_file") {
-                $('#error_image').text('The url is not supported image file').css('display', 'block');
-            }
-            else if (json.status === "url_error") {
-                $('#error_image').text('The image could not be downloaded').css('display', 'block');
-            }
-            else if (json.status === "image_url_error") {
-                $('#error_image').text('The image could not be downloaded successfully').css('display', 'block');
-            }
-            else if (json.status === "internal_error") {
-                $('#error_image').text('Unexpected error occurred. Contact markzampoglou@iti.gr').css('display', 'block');
-            }
-            else if (json.status === "empty_parameter") {
-                $('#error_image').text('Image URL is required').css('display', 'block');
-            }
-            else {
-                $.ajax({
-                    url: "create_page.php?img=" + url,
-                    type: "GET",
-                    success: function (msg) {
-                        window.location.href = msg;
-                    }
-                });
-            }
-        },
-        async: true
-    });
+    if (url.indexOf('http') === 0) {
+        $.ajax({
+            type: "GET",
+            url: "http://caa.iti.gr/imageforensicsv3/addurl?url=" + encodeURIComponent(url.trim()),
+            dataType: "jsonp",
+            success: function (json) {
+                if ((json.status === "internal_error") || (json.status === "empty_parameter") || (json.status === "image_url_error") || (json.status === "no_valid_url") || (json.status === "unsupported_file") || (json.status === "url_error")) {
+                    $('#error_image').text(json.message).css('display', 'block');
+                }
+                else {
+                    $.ajax({
+                        url: "create_page.php?img=" + url,
+                        type: "GET",
+                        success: function (msg) {
+                            window.location.href = msg;
+                        }
+                    });
+                }
+            },
+            async: true
+        });
+    }
+    else {
+        $('#error_image').text('Not valid URL. http is missing').css('display', 'block');
+    }
 }
 
 $('#verify_text_but').click(function () {
@@ -1218,12 +1208,6 @@ $(document).on("click", ".example_info", function () {
 });
 $(document).on("click", ".image_back", function () {
     document.querySelector('#flip-toggle-' + $(this).attr("data-pos")).classList.toggle('hover');
-});
-
-$("#img_url").keyup(function (e) {
-    if (e.keyCode === 13) {
-        create_page($(this).val());
-    }
 });
 
 $("#upload_form").submit(function (e) {
