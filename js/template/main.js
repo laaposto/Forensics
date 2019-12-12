@@ -196,13 +196,13 @@ function verify_col_items() {
     url_to_verify = decodeURIComponent(url_to_verify.replace(/\s/g, "%20"));
     $.ajax({
         type: "GET",
-        url: "http://caa.iti.gr/imageforensicsv3/addurl?url=" + encodeURIComponent(url_to_verify.trim()),
+        url: host + "/imageforensicsv3/addurl?url=" + encodeURIComponent(url_to_verify.trim()),
         dataType: "jsonp",
         success: function (json) {
             hash = json.hash;
             $.ajax({
                 type: "GET",
-                url: "http://caa.iti.gr/imageforensicsv3/generatereport?hash=" + hash,
+                url: host + "/imageforensicsv3/generatereport?hash=" + hash,
                 dataType: "jsonp",
                 success: function (json) {
                 },
@@ -216,7 +216,7 @@ function verify_col_items() {
                 report_interval = setInterval(function () {
                     $.ajax({
                         type: "GET",
-                        url: "http://caa.iti.gr/imageforensicsv3/getreport?hash=" + hash,
+                        url: host + "/imageforensicsv3/getreport?hash=" + hash,
                         dataType: "jsonp",
                         success: function (data) {
                             if (image_load) {
@@ -455,7 +455,7 @@ function verify_col_items() {
                                     else {
                                         $('.tooltip,.desc_arrow').css('visibility', 'hidden');
                                         $('.flatTable thead td').text("Metadata for this image couldn't be extracted");
-                                        $('.flatTable thead tr').css('width','380px');
+                                        $('.flatTable thead tr').css('width', '380px');
                                     }
                                     values_flag = false;
                                     count_status++;
@@ -614,35 +614,35 @@ function verify_col_items() {
                                     }
                                     if (dq_flag) {
                                         $('#a0').hide();
-                                        $('<p class="error_map">'+data.dqReport.message+'</p>').insertBefore('#a0');
+                                        $('<p class="error_map">' + data.dqReport.message + '</p>').insertBefore('#a0');
                                     }
                                     if (ghost_flag) {
                                         $('#a1,#slider_range,.quality_wrapper').hide();
-                                        $('<p class="error_map">'+data.ghostReport.message+'</p>').insertBefore('#a1');
+                                        $('<p class="error_map">' + data.ghostReport.message + '</p>').insertBefore('#a1');
                                     }
                                     if (noise_flag) {
                                         $('#a5').hide();
-                                        $('<p class="error_map">'+data.dwNoiseReport.message+'</p>').insertBefore('#a5');
+                                        $('<p class="error_map">' + data.dwNoiseReport.message + '</p>').insertBefore('#a5');
                                     }
                                     if (ela_flag) {
                                         $('#a3').hide();
-                                        $('<p class="error_map">'+data.elaReport.message+'</p>').insertBefore('#a3');
+                                        $('<p class="error_map">' + data.elaReport.message + '</p>').insertBefore('#a3');
                                     }
                                     if (blk_flag) {
                                         $('#a2').hide();
-                                        $('<p class="error_map">'+data.blockingReport.message+'</p>').insertBefore('#a2');
+                                        $('<p class="error_map">' + data.blockingReport.message + '</p>').insertBefore('#a2');
                                     }
                                     if (media_flag) {
                                         $('#a4').hide();
-                                        $('<p class="error_map">'+data.medianNoiseReport.message+'</p>').insertBefore('#a4');
+                                        $('<p class="error_map">' + data.medianNoiseReport.message + '</p>').insertBefore('#a4');
                                     }
                                     if (grids_flag) {
                                         $('#a6').hide();
-                                        $('<p class="error_map">'+data.gridsReport.message+'</p>').insertBefore('#a6');
+                                        $('<p class="error_map">' + data.gridsReport.message + '</p>').insertBefore('#a6');
                                     }
                                     if (gridsinv_flag) {
                                         $('#a7').hide();
-                                        $('<p class="error_map">'+data.gridsInversedReport.message+'</p>').insertBefore('#a7');
+                                        $('<p class="error_map">' + data.gridsInversedReport.message + '</p>').insertBefore('#a7');
                                     }
                                 }
                             }
@@ -796,7 +796,7 @@ function download_pdf() {
     $("#download").hide();
     $.ajax({
         type: "GET",
-        url: "http://caa.iti.gr/imageforensics/getreportbase64?hash=" + hash,
+        url: host + "/imageforensics/getreportbase64?hash=" + hash,
         dataType: "jsonp",
         success: function (json) {
             $('#loading_pdf').hide();

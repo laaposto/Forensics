@@ -69,10 +69,11 @@ $("#img_url").keyup(function (e) {
 });
 
 function create_page(url) {
+    $('#img_url').val(url);
     if (url.indexOf('http') === 0) {
         $.ajax({
             type: "GET",
-            url: "http://caa.iti.gr/imageforensicsv3/addurl?url=" + encodeURIComponent(url.trim()),
+            url: host + "/imageforensicsv3/addurl?url=" + encodeURIComponent(url.trim()),
             dataType: "jsonp",
             success: function (json) {
                 if ((json.status === "internal_error") || (json.status === "empty_parameter") || (json.status === "image_url_error") || (json.status === "no_valid_url") || (json.status === "unsupported_file") || (json.status === "url_error")) {

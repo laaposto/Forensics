@@ -1,0 +1,1 @@
+var host="http://caa.iti.gr"; //Fill service location. It can be localhost.

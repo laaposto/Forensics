@@ -24,11 +24,6 @@ if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpe
 }
 
 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-    $myfile = fopen("uploads_logs.txt", "a") or die("error4");
-	$txt = $_SERVER['REMOTE_ADDR'] . ' ---> ' . str_replace("uploads/", "", $target_file) . ' ---> ' . gmdate('d-m-Y H:i:s',strtotime('+17 minutes'));
-	fwrite($myfile, "\n". $txt);
-	fclose($myfile);
-	
 	echo basename($target_file);
 } else {
     echo "error4";
